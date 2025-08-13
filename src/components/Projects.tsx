@@ -45,8 +45,8 @@ const Projects = () => {
       description: 'A responsive and real-time chat application built using React.js, Tailwind CSS, DaisyUI for UI components, and a Node.js + Express backend for managing socket connections and message handling.',
       image: '/assets/chat.png',
       tech: ['React', 'nodejs', 'express', 'mongodb','socket.io','daisyUI'],
-      link: '',
-      github: ''
+      link: 'https://chat-app-gqkd.onrender.com/login',
+      github: 'https://github.com/vulture02/chat-app'
     },
     {
       title: 'smart-health-planner',
