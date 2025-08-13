@@ -1,0 +1,234 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 218 23% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 218 23% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 218 23% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 215 27% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 27% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 27% 17%;
+    --input: 215 27% 17%;
+    --ring: 262 83% 58%;
+
+    --radius: 0.75rem;
+
+    /* Custom futuristic colors */
+    --neon-blue: 195 100% 50%;
+    --neon-purple: 262 83% 58%;
+    --neon-cyan: 180 100% 50%;
+    --glass-bg: 218 23% 12% / 0.6;
+    --glow-shadow: 262 83% 58% / 0.3;
+  }
+
+  .dark {
+    --background: 218 23% 8%;
+    --foreground: 210 40% 98%;
+    --card: 218 23% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 218 23% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 27% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 27% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 27% 17%;
+    --input: 215 27% 17%;
+    --ring: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-light;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom Animations and Effects */
+@layer utilities {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 20px hsla(var(--neon-purple) / 0.3);
+  }
+
+  .neon-glow-blue {
+    box-shadow: 0 0 20px hsla(var(--neon-blue) / 0.3);
+  }
+
+  .neon-glow-cyan {
+    box-shadow: 0 0 20px hsla(var(--neon-cyan) / 0.3);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px hsla(var(--neon-purple) / 0.5);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--neon-blue)), hsl(var(--neon-purple)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .floating-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+  }
+
+  .blur-to-clear {
+    filter: blur(10px);
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .clear {
+    filter: blur(0px);
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 5px hsla(var(--neon-purple) / 0.2);
+  }
+  100% {
+    box-shadow: 0 0 20px hsla(var(--neon-purple) / 0.6), 0 0 30px hsla(var(--neon-purple) / 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* Locomotive Scroll */
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-container] {
+  height: 100vh;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-section] {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  height: 100%;
+}
+
+.c-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 100%;
+  transform-origin: center right;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+.c-scrollbar:hover {
+  transform: scaleX(1.45);
+}
+.c-scrollbar.c-scrollbar_grabbed {
+  transform: scaleX(1.45);
+}
+.c-scrollbar.c-scrollbar_visible {
+  opacity: 1;
+}
+.c-scrollbar_track {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 7px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.c-scrollbar_thumb {
+  position: absolute;
+  right: 0;
+  width: 7px;
+  border-radius: 10px;
+  background-color: hsl(var(--neon-purple));
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.c-scrollbar:hover .c-scrollbar_thumb {
+  opacity: 1;
+}
