@@ -1,72 +1,63 @@
 import { useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Code, Palette } from 'phosphor-react';
+import { Code, Palette } from 'lucide-react';
 import { Database, Laptop, Download, GraduationCap, Briefcase } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   const [activeTab, setActiveTab] = useState('education');
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Check if device is mobile
   useEffect(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.about-section',
-        start: 'top 80%',
-        end: 'bottom 20%',
-        toggleActions: 'play none none reverse'
-      }
-    });
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    tl.fromTo(
-      '.about-image',
-      { opacity: 0, x: -100, filter: 'blur(10px)' },
-      { opacity: 1, x: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }
-    )
-      .fromTo(
-        '.about-content',
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-        '-=0.6'
-      )
-      .fromTo(
-        '.skill-icon',
-        { opacity: 0, y: 30, scale: 0.8 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)' },
-        '-=0.4'
-      )
-      .fromTo(
-        '.resume-button',
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' },
-        '-=0.2'
-      )
-      .fromTo(
-        '.tab-section',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-        '-=0.3'
-      );
+  // GSAP animations (simplified for compatibility)
+  useEffect(() => {
+    // Simple fade-in animation for elements
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach((el, index) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        el.style.transition = 'all 0.6s ease-out';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
 
     // Profile image hover effect
     const profileImage = document.querySelector('.profile-image');
     if (profileImage) {
       profileImage.addEventListener('mouseenter', () => {
-        gsap.to(profileImage, { rotation: 5, scale: 1.05, duration: 0.3, ease: 'power2.out' });
+        profileImage.style.transition = 'transform 0.3s ease-out';
+        profileImage.style.transform = 'rotate(5deg) scale(1.05)';
       });
       profileImage.addEventListener('mouseleave', () => {
-        gsap.to(profileImage, { rotation: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+        profileImage.style.transform = 'rotate(0deg) scale(1)';
       });
     }
   }, []);
 
   // Tab switching animation
   useEffect(() => {
-    gsap.fromTo('.tab-content', 
-      { opacity: 0, y: 20 }, 
-      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
-    );
+    const tabContent = document.querySelector('.tab-content');
+    if (tabContent) {
+      tabContent.style.opacity = '0';
+      tabContent.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        tabContent.style.transition = 'all 0.4s ease-out';
+        tabContent.style.opacity = '1';
+        tabContent.style.transform = 'translateY(0)';
+      }, 50);
+    }
   }, [activeTab]);
 
   const handleResumeDownload = () => {
@@ -80,10 +71,10 @@ const About = () => {
   };
 
   const skills = [
-    { icon: <Code size={32} />, name: 'Frontend', color: 'neon-blue' },
-    { icon: <Palette size={32} />, name: 'UI/UX Design', color: 'neon-purple' },
-    { icon: <Database size={32} />, name: 'Backend & Database', color: 'neon-cyan' },
-    { icon: <Laptop size={32} />, name: 'Java Development', color: 'neon-green' }
+    { icon: <Code size={isMobile ? 24 : 32} />, name: 'Frontend', color: 'neon-blue' },
+    { icon: <Palette size={isMobile ? 24 : 32} />, name: 'UI/UX Design', color: 'neon-purple' },
+    { icon: <Database size={isMobile ? 24 : 32} />, name: 'Backend & Database', color: 'neon-cyan' },
+    { icon: <Laptop size={isMobile ? 24 : 32} />, name: 'Java Development', color: 'neon-green' }
   ];
 
   const techStack = [
@@ -135,54 +126,54 @@ const About = () => {
 
   const TabCard = ({ data, type }: { data: any[], type: string }) => (
     <div className="tab-content relative">
-      <div className="space-y-8">
+      <div className="space-y-6 md:space-y-8">
         {data.map((item, index) => (
           <div key={index} className="group relative">
-            {/* Connection line */}
-            {index !== data.length - 1 && (
-              <div className="absolute left-8 top-16 w-[2px] h-full bg-gradient-to-b from-neon-purple/50 via-neon-blue/30 to-transparent"></div>
+            {/* Connection line - hidden on mobile */}
+            {index !== data.length - 1 && !isMobile && (
+              <div className="absolute left-6 md:left-8 top-12 md:top-16 w-[2px] h-full bg-gradient-to-b from-purple-500/50 via-blue-500/30 to-transparent"></div>
             )}
             
-            <div className="flex gap-8">
+            <div className="flex gap-4 md:gap-8">
               {/* Timeline indicator */}
               <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-purple/20 via-neon-blue/20 to-neon-cyan/20 backdrop-blur-sm border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:border-neon-purple/40 transition-all duration-500">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue"></div>
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 backdrop-blur-sm border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:border-purple-500/40 transition-all duration-500">
+                  <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500"></div>
                 </div>
-                <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-neon-purple/10 to-neon-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                <div className="absolute -inset-1 md:-inset-2 rounded-2xl md:rounded-3xl bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
               </div>
               
               {/* Content card */}
-              <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 group-hover:border-neon-purple/30 group-hover:bg-white/10 transition-all duration-500">
-                <div className="space-y-6">
+              <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 group-hover:border-purple-500/30 group-hover:bg-white/10 transition-all duration-500">
+                <div className="space-y-4 md:space-y-6">
                   {/* Header */}
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                    <div className="space-y-2">
-                      <h4 className="text-2xl font-semibold text-white group-hover:text-neon-cyan transition-colors duration-300">
+                  <div className="flex flex-col gap-3 md:gap-4">
+                    <div className="space-y-1 md:space-y-2">
+                      <h4 className="text-lg md:text-2xl font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 leading-tight">
                         {type === 'education' ? item.degree : item.position}
                       </h4>
-                      <h5 className="text-lg font-medium bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
+                      <h5 className="text-sm md:text-lg font-medium bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
                         {type === 'education' ? item.institution : item.company}
                       </h5>
                     </div>
                     <div className="flex-shrink-0">
-                      <span className="inline-block px-4 py-2 text-sm font-medium bg-gradient-to-r from-neon-cyan/20 to-neon-blue/20 backdrop-blur-sm border border-neon-cyan/30 rounded-full text-neon-cyan">
+                      <span className="inline-block px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-500/30 rounded-full text-cyan-400">
                         {item.duration}
                       </span>
                     </div>
                   </div>
                   
                   {/* Description */}
-                  <p className="text-gray-300 leading-relaxed text-lg">
+                  <p className="text-gray-300 leading-relaxed text-sm md:text-lg">
                     {item.description}
                   </p>
                   
                   {/* Achievements */}
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 md:gap-3">
                     {item.achievements.map((achievement: string, i: number) => (
                       <span 
                         key={i} 
-                        className="px-3 py-1 text-sm bg-gradient-to-r from-neon-blue/10 to-neon-purple/10 backdrop-blur-sm border border-neon-blue/20 rounded-full text-neon-blue hover:border-neon-blue/40 hover:bg-neon-blue/20 transition-all duration-300 cursor-default"
+                        className="px-2 py-1 md:px-3 text-xs md:text-sm bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-500/20 rounded-full text-blue-400 hover:border-blue-500/40 hover:bg-blue-500/20 transition-all duration-300 cursor-default"
                       >
                         {achievement}
                       </span>
@@ -191,7 +182,7 @@ const About = () => {
                 </div>
                 
                 {/* Decorative corner gradient */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-neon-purple/5 to-transparent rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-0 right-0 w-16 h-16 md:w-32 md:h-32 bg-gradient-to-bl from-purple-500/5 to-transparent rounded-tr-2xl md:rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </div>
           </div>
@@ -201,70 +192,72 @@ const About = () => {
   );
 
   return (
-    <section id="about" className="about-section py-32 px-6 relative overflow-hidden">
+    <section id="about" className="about-section py-16 md:py-24 lg:py-32 px-4 md:px-6 relative overflow-hidden bg-gray-900">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-neon-purple to-neon-blue rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-neon-cyan to-neon-green rounded-full blur-3xl"></div>
+        <div className="absolute top-10 md:top-20 left-5 md:left-10 w-48 md:w-72 h-48 md:h-72 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-64 md:w-96 h-64 md:h-96 bg-gradient-to-br from-cyan-500 to-green-500 rounded-full blur-3xl"></div>
       </div>
       
-      <div className="max-w-7xl mx-auto space-y-24 relative z-10">
+      <div className="max-w-7xl mx-auto space-y-16 md:space-y-24 relative z-10">
         
         {/* Main About Section */}
-        <div className="grid lg:grid-cols-5 gap-12 items-start">
+        <div className="grid lg:grid-cols-5 gap-8 md:gap-12 items-start">
           
           {/* Profile Image */}
-          <div className="about-image lg:col-span-2 flex justify-center lg:justify-start">
+          <div className="about-image lg:col-span-2 flex justify-center lg:justify-start animate-on-scroll">
             <div className="relative group">
-              <div className="profile-image w-72 h-72 rounded-3xl overflow-hidden bg-gradient-to-br from-neon-purple/20 via-neon-blue/20 to-neon-cyan/20 p-1 cursor-pointer backdrop-blur-sm border border-white/10">
-                <img
+              <div className="profile-image w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 p-1 cursor-pointer backdrop-blur-sm border border-white/10">
+                <div className="w-full h-full bg-gradient-to-br from-purple-200 to-blue-200 rounded-2xl md:rounded-3xl flex items-center justify-center text-gray-600 text-lg md:text-xl font-medium">
+                  <img
                   src="assets/portfolio.jpg"
                   alt="Amith P - Full Stack Developer"
                   className="w-full h-full object-cover rounded-3xl"
                 />
+                </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl opacity-20 rotate-12 group-hover:rotate-45 transition-transform duration-500"></div>
-              <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-r from-neon-cyan to-neon-green rounded-full opacity-30 group-hover:scale-125 transition-transform duration-500"></div>
-              <div className="absolute top-1/2 -right-12 w-3 h-3 bg-neon-purple rounded-full opacity-60 animate-pulse"></div>
-              <div className="absolute bottom-1/4 -left-8 w-2 h-2 bg-neon-cyan rounded-full opacity-40 animate-bounce"></div>
+              {/* Floating elements - smaller on mobile */}
+              <div className="absolute -top-3 md:-top-6 -right-3 md:-right-6 w-12 h-12 md:w-20 md:h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl md:rounded-2xl opacity-20 rotate-12 group-hover:rotate-45 transition-transform duration-500"></div>
+              <div className="absolute -bottom-4 md:-bottom-8 -left-4 md:-left-8 w-10 h-10 md:w-16 md:h-16 bg-gradient-to-r from-cyan-500 to-green-500 rounded-full opacity-30 group-hover:scale-125 transition-transform duration-500"></div>
+              <div className="absolute top-1/2 -right-6 md:-right-12 w-2 h-2 md:w-3 md:h-3 bg-purple-500 rounded-full opacity-60 animate-pulse"></div>
+              <div className="absolute bottom-1/4 -left-4 md:-left-8 w-1.5 h-1.5 md:w-2 md:h-2 bg-cyan-500 rounded-full opacity-40 animate-bounce"></div>
             </div>
           </div>
 
           {/* About Content */}
-          <div className="about-content lg:col-span-3 space-y-10">
-            <div className="space-y-8">
+          <div className="about-content lg:col-span-3 space-y-8 md:space-y-10 animate-on-scroll">
+            <div className="space-y-6 md:space-y-8">
               <div>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-[2px] bg-gradient-to-r from-neon-purple to-neon-blue"></div>
-                  <h2 className="text-5xl lg:text-6xl font-extralight tracking-tight">
-                    About <span className="bg-gradient-to-r from-neon-purple via-neon-blue to-neon-cyan bg-clip-text text-transparent font-normal">Me</span>
+                <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                  <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-purple-500 to-blue-500"></div>
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-extralight tracking-tight">
+                    About <span className="bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent font-normal">Me</span>
                   </h2>
                 </div>
                 
-                <div className="space-y-6">
-                  <p className="text-xl text-gray-300 leading-relaxed font-light">
-                    Hi, I'm <span className="text-neon-cyan font-medium">Amith P</span> — a passionate full-stack developer crafting digital experiences that matter. 
+                <div className="space-y-4 md:space-y-6">
+                  <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
+                    Hi, I'm <span className="text-cyan-400 font-medium">Amith P</span> — a passionate full-stack developer crafting digital experiences that matter. 
                     I blend creative problem-solving with technical excellence to build applications that users love.
                   </p>
-                  <p className="text-lg text-gray-400 leading-relaxed">
-                    Specializing in the <span className="text-neon-purple font-medium">MERN stack</span>, I also work extensively with Java, Python, and modern AI technologies. 
-                    Currently exploring the intersection of <span className="text-neon-blue font-medium">Artificial Intelligence</span> and web development.
+                  <p className="text-base md:text-lg text-gray-400 leading-relaxed">
+                    Specializing in the <span className="text-purple-400 font-medium">MERN stack</span>, I also work extensively with Java, Python, and modern AI technologies. 
+                    Currently exploring the intersection of <span className="text-blue-400 font-medium">Artificial Intelligence</span> and web development.
                   </p>
                 </div>
               </div>
 
               {/* Resume Download Button */}
-              <div className="resume-button">
+              <div className="resume-button animate-on-scroll">
                 <button
                   onClick={handleResumeDownload}
-                  className="group relative px-8 py-4 bg-gradient-to-r from-neon-purple/10 to-neon-blue/10 backdrop-blur-sm border border-neon-purple/30 rounded-xl hover:border-neon-purple/60 transition-all duration-300 overflow-hidden"
+                  className="group relative px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm border border-purple-500/30 rounded-xl hover:border-purple-500/60 transition-all duration-300 overflow-hidden w-full md:w-auto"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-neon-purple/0 to-neon-blue/0 group-hover:from-neon-purple/20 group-hover:to-neon-blue/20 transition-all duration-300"></div>
-                  <div className="relative flex items-center gap-3 text-lg font-medium">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/20 group-hover:to-blue-500/20 transition-all duration-300"></div>
+                  <div className="relative flex items-center justify-center md:justify-start gap-3 text-base md:text-lg font-medium">
                     <Download 
-                      size={22} 
-                      className="text-neon-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" 
+                      size={isMobile ? 18 : 22} 
+                      className="text-purple-500 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" 
                     />
                     Download Resume
                   </div>
@@ -273,35 +266,35 @@ const About = () => {
             </div>
 
             {/* Skills Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 animate-on-scroll">
               {skills.map((skill, index) => (
                 <div
                   key={skill.name}
-                  className="skill-icon group relative p-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:border-neon-purple/40 transition-all duration-500 cursor-pointer overflow-hidden"
+                  className="skill-icon group relative p-4 md:p-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-purple-500/40 transition-all duration-500 cursor-pointer overflow-hidden"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/0 to-neon-blue/0 group-hover:from-neon-purple/10 group-hover:to-neon-blue/10 transition-all duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/10 group-hover:to-blue-500/10 transition-all duration-500"></div>
                   <div className="relative text-center">
-                    <div className="mb-4 flex justify-center text-neon-purple group-hover:scale-110 group-hover:text-neon-blue transition-all duration-300">
+                    <div className="mb-3 md:mb-4 flex justify-center text-purple-500 group-hover:scale-110 group-hover:text-blue-500 transition-all duration-300">
                       {skill.icon}
                     </div>
-                    <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors duration-300">{skill.name}</p>
+                    <p className="text-xs md:text-sm font-medium text-gray-300 group-hover:text-white transition-colors duration-300">{skill.name}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Tech Stack */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-medium text-neon-purple flex items-center gap-3">
-                <div className="w-8 h-[2px] bg-gradient-to-r from-neon-purple to-neon-blue"></div>
+            <div className="space-y-4 md:space-y-6 animate-on-scroll">
+              <h3 className="text-lg md:text-xl font-medium text-purple-500 flex items-center gap-3">
+                <div className="w-6 md:w-8 h-[2px] bg-gradient-to-r from-purple-500 to-blue-500"></div>
                 Tech Arsenal
               </h3>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 md:gap-3">
                 {techStack.map((tech, index) => (
                   <span
                     key={tech}
-                    className="px-4 py-2 text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:border-neon-cyan/40 hover:bg-neon-cyan/10 hover:text-neon-cyan transition-all duration-300 cursor-pointer"
+                    className="px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-400 transition-all duration-300 cursor-pointer"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     {tech}
@@ -313,50 +306,52 @@ const About = () => {
         </div>
 
         {/* Education & Experience Tabs Section */}
-        <div className="tab-section">
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-neon-purple to-neon-blue"></div>
-              <h2 className="text-5xl lg:text-6xl font-extralight tracking-tight">
-                My <span className="bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan bg-clip-text text-transparent font-normal">Journey</span>
+        <div className="tab-section animate-on-scroll">
+          <div className="text-center mb-12 md:mb-16 px-4">
+            <div className="flex items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8">
+              <div className="w-6 md:w-16 h-[2px] bg-gradient-to-r from-transparent via-purple-500 to-blue-500 hidden sm:block"></div>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extralight tracking-tight text-center">
+                My <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent font-normal">Journey</span>
               </h2>
-              <div className="w-16 h-[2px] bg-gradient-to-r from-neon-blue via-neon-purple to-transparent"></div>
+              <div className="w-6 md:w-16 h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-transparent hidden sm:block"></div>
             </div>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
               Explore my educational background and professional experience that shaped my development journey
             </p>
           </div>
           
-          {/* Tab Buttons */}
-          <div className="flex justify-center mb-12">
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded-2xl">
+          {/* Tab Buttons - Mobile First Design */}
+          <div className="flex justify-center mb-8 md:mb-12 px-4">
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 p-1 md:p-2 rounded-xl md:rounded-2xl w-full max-w-sm md:max-w-md">
               <div 
-                className={`absolute top-2 bottom-2 bg-gradient-to-r from-neon-purple/30 to-neon-blue/30 backdrop-blur-sm rounded-xl transition-all duration-500 ease-out ${
-                  activeTab === 'education' ? 'left-2 w-[calc(50%-4px)]' : 'left-[calc(50%+2px)] w-[calc(50%-4px)]'
+                className={`absolute top-1 md:top-2 bottom-1 md:bottom-2 bg-gradient-to-r from-purple-500/30 to-blue-500/30 backdrop-blur-sm rounded-lg md:rounded-xl transition-all duration-500 ease-out ${
+                  activeTab === 'education' 
+                    ? 'left-1 md:left-2 w-[calc(50%-2px)] md:w-[calc(50%-4px)]' 
+                    : 'left-[calc(50%+1px)] md:left-[calc(50%+2px)] w-[calc(50%-2px)] md:w-[calc(50%-4px)]'
                 }`}
               ></div>
-              <div className="relative flex gap-2">
+              <div className="relative flex">
                 <button
                   onClick={() => setActiveTab('education')}
-                  className={`flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-300 font-medium text-lg relative z-10 ${
+                  className={`flex items-center justify-center gap-1.5 md:gap-3 px-3 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl transition-all duration-300 font-medium text-xs sm:text-sm md:text-lg relative z-10 flex-1 min-h-[44px] ${
                     activeTab === 'education'
                       ? 'text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  <GraduationCap size={22} />
-                  Education
+                  <GraduationCap size={isMobile ? 16 : 22} className="flex-shrink-0" />
+                  <span className="truncate">Education</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('experience')}
-                  className={`flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-300 font-medium text-lg relative z-10 ${
+                  className={`flex items-center justify-center gap-1.5 md:gap-3 px-3 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl transition-all duration-300 font-medium text-xs sm:text-sm md:text-lg relative z-10 flex-1 min-h-[44px] ${
                     activeTab === 'experience'
                       ? 'text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  <Briefcase size={22} />
-                  Experience
+                  <Briefcase size={isMobile ? 16 : 22} className="flex-shrink-0" />
+                  <span className="truncate">Experience</span>
                 </button>
               </div>
             </div>
