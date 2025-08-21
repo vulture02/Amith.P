@@ -22,25 +22,27 @@ const About = () => {
     // Simple fade-in animation for elements
     const elements = document.querySelectorAll('.animate-on-scroll');
     elements.forEach((el, index) => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
+      const element = el as HTMLElement;
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
       
       setTimeout(() => {
-        el.style.transition = 'all 0.6s ease-out';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
+        element.style.transition = 'all 0.6s ease-out';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
       }, index * 100);
     });
 
     // Profile image hover effect
     const profileImage = document.querySelector('.profile-image');
     if (profileImage) {
-      profileImage.addEventListener('mouseenter', () => {
-        profileImage.style.transition = 'transform 0.3s ease-out';
-        profileImage.style.transform = 'rotate(5deg) scale(1.05)';
+      const imgEl = profileImage as HTMLElement;
+      imgEl.addEventListener('mouseenter', () => {
+        imgEl.style.transition = 'transform 0.3s ease-out';
+        imgEl.style.transform = 'rotate(5deg) scale(1.05)';
       });
-      profileImage.addEventListener('mouseleave', () => {
-        profileImage.style.transform = 'rotate(0deg) scale(1)';
+      imgEl.addEventListener('mouseleave', () => {
+        imgEl.style.transform = 'rotate(0deg) scale(1)';
       });
     }
   }, []);
@@ -49,13 +51,14 @@ const About = () => {
   useEffect(() => {
     const tabContent = document.querySelector('.tab-content');
     if (tabContent) {
-      tabContent.style.opacity = '0';
-      tabContent.style.transform = 'translateY(20px)';
+      const tabContentEl = tabContent as HTMLElement;
+      tabContentEl.style.opacity = '0';
+      tabContentEl.style.transform = 'translateY(20px)';
       
       setTimeout(() => {
-        tabContent.style.transition = 'all 0.4s ease-out';
-        tabContent.style.opacity = '1';
-        tabContent.style.transform = 'translateY(0)';
+        tabContentEl.style.transition = 'all 0.4s ease-out';
+        tabContentEl.style.opacity = '1';
+        tabContentEl.style.transform = 'translateY(0)';
       }, 50);
     }
   }, [activeTab]);
